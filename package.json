@@ -1,5 +1,5 @@
 {
-  "name": "CMS_API",
+  "name": "VMS_API",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
@@ -22,6 +22,7 @@
     "formidable": "^3.5.1",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.2.5",
+    "read-excel-file": "^5.7.1",
     "sequelize": "^6.32.1"
   },
   "devDependencies": {

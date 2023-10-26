@@ -1,5 +1,5 @@
 const { authJwt } = require("../middleware");
-const colorTones = require("../controllers/product-color-tone.controller");
+const vehicles = require("../controllers/vehicle.controller");
 
 module.exports = function(app) {
   app.use(function(req, res, next) {
@@ -10,5 +10,7 @@ module.exports = function(app) {
     next();
   });
 
-  app.get("/api/colors", colorTones.getAll)
+  app.get("/api/vehicles", [authJwt.verifyToken], vehicles.getAll)
+
+  app.post("/api/vehicles", [authJwt.verifyToken], vehicles.create)
 };

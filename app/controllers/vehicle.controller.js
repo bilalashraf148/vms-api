@@ -37,6 +37,7 @@ exports.create = async (req, res) => {
     }
     try {
       readXlsxFile(files.file[0].filepath, { schema }).then(async ({ rows } ) => {
+        console.log("====this is testing console");
         await Vehicles.bulkCreate(rows);
         res.status(200).json({ message: "Data and files uploaded and saved successfully" });
       });

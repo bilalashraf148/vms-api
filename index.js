@@ -22,7 +22,11 @@ const app = express();
   db.sequelize.sync();
 
   app.get("/", (req, res) => {
-  res.json({ message: "Express API is Ready" });
+    res.json({ message: "Express API is Ready" });
+  });
+
+  app.get("/new-end-point", (req, res) => {
+    res.json({ message: "Express API is Ready" });
   });
 
   // routes

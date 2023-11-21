@@ -25,10 +25,6 @@ const app = express();
     res.json({ message: "Express API is Ready" });
   });
 
-  app.get("/new-end-point", (req, res) => {
-    res.json({ message: "Express API is Ready" });
-  });
-
   // routes
   require('./app/routes/auth.routes')(app);
   require("./app/routes/vehicle.routes")(app);

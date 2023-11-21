@@ -29,6 +29,7 @@ const schema = {
 exports.create = async (req, res) => {
   const form = new formidable.IncomingForm();
   form.multiples = true;
+  const chunkSize = 500;
   form.parse(req, async (err, _, files) => {
     if (err) {
       console.error("Error parsing form data:", err);
@@ -36,10 +37,19 @@ exports.create = async (req, res) => {
       return;
     }
     try {
-      readXlsxFile(files.file[0].filepath, { schema }).then(async ({ rows } ) => {
-        await Vehicles.bulkCreate(rows);
-        res.status(200).json({ message: "Data and files uploaded and saved successfully" });
-      });
+      // readXlsxFile(files.file[0].filepath, { schema }).then(async ({ rows } ) => {
+      //   await Vehicles.bulkCreate(rows);
+      //   res.status(200).json({ message: "Data and files uploaded and saved successfully" });
+      // });
+      const totalChunks = Math.ceil(rows.length / chunkSize);
+      // Insert data in chunks
+      for (let i = 0; i < totalChunks; i++) {
+        const start = i * chunkSize;
+        const end = (i + 1) * chunkSize;
+        const chunk = rows.slice(start, end);
+
+        await Vehicles.bulkCreate(chunk);
+      }
     }
     catch (err) {
       res.status(500).json({ message: "Error creating product and color tones" });

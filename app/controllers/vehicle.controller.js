@@ -36,23 +36,25 @@ exports.create = async (req, res) => {
       return;
     }
     try {
+      const chunkSize = 500;
       const { rows } = await readXlsxFile(files.file[0].filepath, { schema });
-      // const totalChunks = Math.ceil(rows.length / chunkSize);
+      const totalChunks = Math.ceil(rows.length / chunkSize);
 
-      // // Insert data in chunks synchronously
-      // for (let i = 0; i < totalChunks; i++) {
-      //   const start = i * chunkSize;
-      //   const end = (i + 1) * chunkSize;
-      //   const chunk = rows.slice(start, end);
+      // Insert data in chunks synchronously
+      for (let i = 0; i < totalChunks; i++) {
+        const start = i * chunkSize;
+        const end = (i + 1) * chunkSize;
+        const chunk = rows.slice(start, end);
 
-      //   await Vehicles.bulkCreate(chunk);
-      // }
-      for (const row of rows) {
-       await Vehicles.create(row);
+        await Vehicles.bulkCreate(chunk);
       }
+      // for (const row of rows) {
+      //  await Vehicles.create(row);
+      // }
       res.status(200).json({ message: "Data and files uploaded and saved successfully" });
     }
     catch (err) {
+      console.log("🚀 ~ file: vehicle.controller.js:56 ~ form.parse ~ err:", err);
       res.status(500).json({ message: "Error creating vehicles" });
     }
   });

@@ -25,14 +25,7 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.user = require("../models/user.model.js")(sequelize, Sequelize);
-db.colorTones = require("./color-tone.model.js")(sequelize, Sequelize);
-db.products = require("./product.model.js")(sequelize, Sequelize);
 db.vehicles = require("./vehicle.model.js")(sequelize, Sequelize);
-
-db.products.hasMany(db.colorTones, {
-  foreignKey: "productId",
-  as: "colorTones",
-});
 
 db.ROLES = ["user", "admin"];
 

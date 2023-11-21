@@ -20,28 +20,28 @@ const schema = {
     prop: "city",
     type: String,
   },
+  Bank: {
+    prop: "bankName",
+    type: String,
+  }
 };
 
 exports.create = async (req, res) => {
   const form = new formidable.IncomingForm();
   form.multiples = true;
-  form.parse(req, async (err, fields, files) => {
+  form.parse(req, async (err, _, files) => {
     if (err) {
       console.error("Error parsing form data:", err);
       res.status(500).json({ message: "Error parsing form data" });
       return;
     }
     try {
-      console.log("🚀 ~ file: vehicle.controller.js:29 ~ form.parse ~ fields:", fields);
       readXlsxFile(files.file[0].filepath, { schema }).then(async ({ rows } ) => {
-        for (const row of rows) {
-          await Vehicles.create(row);
-        }
-      })
-      res.status(200).json({ message: "Data and files uploaded and saved successfully" });
+        await Vehicles.bulkCreate(rows);
+        res.status(200).json({ message: "Data and files uploaded and saved successfully" });
+      });
     }
     catch (err) {
-      console.log("🚀 ~ file: product-color-tone.controller.js:47 ~ form.parse ~ err:", err)
       res.status(500).json({ message: "Error creating product and color tones" });
     }
   });
@@ -50,4 +50,15 @@ exports.create = async (req, res) => {
 exports.getAll = async (req, res) => {
   const vehicles = await Vehicles.findAll({});
   res.status(200).json(vehicles);
+};
+
+exports.delete = async (req, res) => {
+  try {
+    await Vehicles.destroy({ where: { id: req.body } }); 
+    res.status(200).json("Data deleted successfully");
+  } 
+  catch (error) {
+    console.error('Error deleting records:', error);
+    res.status(500).json({ error: 'Error deleting records' });
+  }
 };

@@ -10,7 +10,12 @@ module.exports = function(app) {
     next();
   });
 
-  app.get("/api/vehicles", [authJwt.verifyToken], vehicles.getAll)
+  app.get("/api/test", () => {
+    res.status(200).json({version: "1.0.0"});
+  });
+  app.get("/api/vehicles", [authJwt.verifyToken], vehicles.getAll);
 
-  app.post("/api/vehicles", [authJwt.verifyToken], vehicles.create)
+  app.post("/api/vehicles", [authJwt.verifyToken], vehicles.create);
+
+  app.delete("/api/vehicles", [authJwt.verifyToken], vehicles.delete);
 };

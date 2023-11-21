@@ -1,0 +1,25 @@
+name: Prod Deployment
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  api-deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+    -  name: Get latest code
+       uses: actions/checkout@2
+
+    -  name: Sync files
+       uses: lukasmartinelli/ftp-action@master
+       with:
+         server: ftp.aliimranassociates.com
+         user: ${{ secrets.USERNAME }}
+         password: ${{ secrets.PASSWORD }}
+         localDir: ./public_html/api.aliimranassociates.com/
+         remoteDir: /
+         parallelUploads: 4
+      

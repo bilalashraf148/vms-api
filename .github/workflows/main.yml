@@ -17,9 +17,9 @@ jobs:
        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
        with:
          server: ftp.aliimranassociates.com
-         user: ${{ secrets.USERNAME }}
+         username: ${{ secrets.USERNAME }}
          password: ${{ secrets.PASSWORD }}
-         localDir: ./public_html/api.aliimranassociates.com/
-         remoteDir: /
+         local-dir: ./public_html/api.aliimranassociates.com/
+         server-dir: /
          parallelUploads: 4
       

@@ -37,22 +37,21 @@ exports.create = async (req, res) => {
       return;
     }
     try {
-      readXlsxFile(files.file[0].filepath, { schema }).then(async ({ rows } ) => {
-        //   await Vehicles.bulkCreate(rows);
-        //   res.status(200).json({ message: "Data and files uploaded and saved successfully" });
-        // });
-        const totalChunks = Math.ceil(rows.length / chunkSize);
-        // Insert data in chunks
-        for (let i = 0; i < totalChunks; i++) {
-          const start = i * chunkSize;
-          const end = (i + 1) * chunkSize;
-          const chunk = rows.slice(start, end);
-          await Vehicles.bulkCreate(chunk);
-        }
-      });
+      const { rows } = await readXlsxFile(files.file[0].filepath, { schema });
+      const totalChunks = Math.ceil(rows.length / chunkSize);
+      
+      // Insert data in chunks synchronously
+      for (let i = 0; i < totalChunks; i++) {
+        const start = i * chunkSize;
+        const end = (i + 1) * chunkSize;
+        const chunk = rows.slice(start, end);
+
+        await Vehicles.bulkCreate(chunk);
+      }
+      res.status(200).json({ message: "Data and files uploaded and saved successfully" });
     }
     catch (err) {
-      res.status(500).json({ message: "Error creating product and color tones" });
+      res.status(500).json({ message: "Error creating vehicles" });
     }
   });
 };

@@ -21,5 +21,4 @@ jobs:
          password: ${{ secrets.PASSWORD }}
          local-dir: ./public_html/api.aliimranassociates.com/
          server-dir: /
-         parallelUploads: 4
       

@@ -29,6 +29,7 @@ const schema = {
 exports.create = async (req, res) => {
   const form = new formidable.IncomingForm();
   form.multiples = true;
+  let responseObj = {};
   form.parse(req, async (err, _, files) => {
     if (err) {
       console.error("Error parsing form data:", err);
@@ -36,7 +37,7 @@ exports.create = async (req, res) => {
       return;
     }
     try {
-      const chunkSize = 500;
+      const chunkSize = 300;
       const { rows } = await readXlsxFile(files.file[0].filepath, { schema });
       const totalChunks = Math.ceil(rows.length / chunkSize);
 
@@ -45,13 +46,10 @@ exports.create = async (req, res) => {
         const start = i * chunkSize;
         const end = (i + 1) * chunkSize;
         const chunk = rows.slice(start, end);
-
         await Vehicles.bulkCreate(chunk);
+        responseObj[i] = {start, end};
       }
-      // for (const row of rows) {
-      //  await Vehicles.create(row);
-      // }
-      res.status(200).json({ message: "Data and files uploaded and saved successfully" });
+      res.status(200).json({ message: "Data and files uploaded and saved successfully", responseObj });
     }
     catch (err) {
       console.log("🚀 ~ file: vehicle.controller.js:56 ~ form.parse ~ err:", err);
